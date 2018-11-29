@@ -3,6 +3,36 @@ import uuid from 'uuid/v4';
 import Bricks from 'bricks.js';
 import './App.css';
 
+const ErrorButton = () => (
+  <button
+    onClick={() => {
+      throw Error('I am the error');
+    }}
+  >
+    Trigger Error
+  </button>
+);
+
+class ErrorBoundary extends Component {
+  state = { error: null };
+  static getDerivedStateFromError(error) {
+    return { error };
+  }
+
+  componentDidCatch(error, info) {
+    console.log(error, info);
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        {this.state.error && <h1>{this.state.error}</h1>}
+        {this.props.children}
+      </React.Fragment>
+    );
+  }
+}
+
 const randomInt = (min, max) => {
   const minimum = Math.ceil(min);
   const maximum = Math.floor(max);
@@ -52,7 +82,7 @@ class Grid extends Component {
     });
     this.bricks.resize(true).pack();
 
-    setInterval(() => {
+    this.interval = setInterval(() => {
       this.addBlocks();
     }, 2000);
   }
@@ -63,6 +93,11 @@ class Grid extends Component {
       blocks: prevState.blocks.concat(newBlocks),
     }));
   };
+
+  shouldComponentUpdate(nextProps, nextState) {
+    // Only update if bricks change
+    return nextState.blocks.length > this.state.blocks.length;
+  }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     this.bricks.pack();
@@ -87,10 +122,18 @@ class Grid extends Component {
     return null;
   }
 
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
   render() {
     return (
       <div className="wrapper">
         <div className="Grid" ref={this.grid}>
+          <ErrorBoundary>
+            <ErrorButton />
+          </ErrorBoundary>
+
           {this.state.blocks.map(block => (
             <div
               key={block.id}
