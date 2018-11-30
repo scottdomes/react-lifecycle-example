@@ -2,27 +2,7 @@ import React, { Component } from 'react';
 import uuid from 'uuid/v4';
 import './App.css';
 import { initializeGrid, layoutInitialGrid } from './grid';
-import ErrorButton from './ErrorButton';
-
-class ErrorBoundary extends Component {
-  state = { errorMessage: null };
-  static getDerivedStateFromError(error) {
-    return { errorMessage: error.message };
-  }
-
-  componentDidCatch(error, info) {
-    console.log(error, info);
-  }
-
-  render() {
-    return (
-      <React.Fragment>
-        {this.state.errorMessage && <h1>{this.state.errorMessage}</h1>}
-        {this.props.children}
-      </React.Fragment>
-    );
-  }
-}
+import { ErrorButton, ErrorBoundary } from './errors';
 
 const randomInt = (min, max) => {
   const minimum = Math.ceil(min);
@@ -107,7 +87,6 @@ class Grid extends Component {
   }
 
   render() {
-    console.log(this.state);
     return (
       <div className="wrapper">
         <div className="Grid" ref={this.grid}>
