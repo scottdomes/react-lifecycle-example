@@ -89,11 +89,13 @@ class Grid extends Component {
   render() {
     return (
       <div className="wrapper">
-        <div className="Grid" ref={this.grid}>
+        <div className="error">
           <ErrorBoundary>
             <ErrorButton />
           </ErrorBoundary>
+        </div>
 
+        <div className="Grid" ref={this.grid}>
           {this.state.blocks.map(block => (
             <div
               key={block.id}

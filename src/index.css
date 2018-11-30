@@ -19,6 +19,7 @@ code {
   width: 85%;
   max-width: 960px;
   margin: 0 auto;
+  position: relative;
 }
 
 .Grid {
@@ -28,8 +29,12 @@ code {
 
 .grid-item {
   background-color: #e6e6e6;
-  /*margin: 10px;*/
   width: 150px;
 }
 
+.error {
+  width: 100%;
+  position: absolute;
+  z-index: 2;
+}
 
