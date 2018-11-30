@@ -9,7 +9,7 @@ export class ErrorButton extends Component {
 
   render() {
     if (this.state.showError) {
-      throw new Error('Oops!');
+      throw new Error('Something went wrong.');
     }
 
     return <button onClick={this.handleClick}>Trigger Error</button>;
