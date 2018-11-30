@@ -12,7 +12,15 @@ class ErrorButton extends React.Component {
       throw new Error('Oops!');
     }
 
-    return <button onClick={this.handleClick}>Trigger Error</button>;
+    return (
+      <button
+        onClick={() => {
+          throw new Error('Click!');
+        }}
+      >
+        Trigger Error
+      </button>
+    );
   }
 }
 
