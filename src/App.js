@@ -1,22 +1,13 @@
 import React, { Component } from 'react';
 import uuid from 'uuid/v4';
-import Bricks from 'bricks.js';
 import './App.css';
-
-const ErrorButton = () => (
-  <button
-    onClick={() => {
-      throw Error('I am the error');
-    }}
-  >
-    Trigger Error
-  </button>
-);
+import { initializeGrid, layoutInitialGrid } from './grid';
+import ErrorButton from './ErrorButton';
 
 class ErrorBoundary extends Component {
-  state = { error: null };
+  state = { errorMessage: null };
   static getDerivedStateFromError(error) {
-    return { error };
+    return { errorMessage: error.message };
   }
 
   componentDidCatch(error, info) {
@@ -26,7 +17,7 @@ class ErrorBoundary extends Component {
   render() {
     return (
       <React.Fragment>
-        {this.state.error && <h1>{this.state.error}</h1>}
+        {this.state.errorMessage && <h1>{this.state.errorMessage}</h1>}
         {this.props.children}
       </React.Fragment>
     );
@@ -60,7 +51,6 @@ class Grid extends Component {
   }
 
   static getDerivedStateFromProps(props, state) {
-    // No access to this
     if (state.blocks.length > 0) {
       return {};
     }
@@ -69,18 +59,8 @@ class Grid extends Component {
   }
 
   componentDidMount() {
-    this.bricks = Bricks({
-      container: this.grid.current,
-      packed: 'packed',
-      sizes: [
-        { columns: 2, gutter: 10 },
-        { mq: '600px', columns: 3, gutter: 10 },
-        { mq: '800px', columns: 4, gutter: 10 },
-        { mq: '1000px', columns: 5, gutter: 10 },
-        { mq: '1130px', columns: 6, gutter: 12 },
-      ],
-    });
-    this.bricks.resize(true).pack();
+    this.bricks = initializeGrid(this.grid.current);
+    layoutInitialGrid(this.bricks);
 
     this.interval = setInterval(() => {
       this.addBlocks();
@@ -127,6 +107,7 @@ class Grid extends Component {
   }
 
   render() {
+    console.log(this.state);
     return (
       <div className="wrapper">
         <div className="Grid" ref={this.grid}>
